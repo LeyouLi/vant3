@@ -4,11 +4,16 @@ import { connect, mapProps, mapReadPretty, h } from '@formily/vue'
 import { defineComponent } from 'vue'
 import type { FieldProps as VanInputProps } from 'vant'
 import { Field as VanInput } from 'vant'
+import { transformComponent } from '../__builtins__'
 import { resolveComponent } from '../__builtins__/shared'
 import { stylePrefix } from '../__builtins__/configs'
 import { PreviewText } from '../preview-text'
 
-export type InputProps = VanInputProps
+export type InputProps = typeof VanInput
+
+const TransformVanInput = transformComponent<InputProps>(VanInput, {
+  change: 'update:modelValue',
+})
 
 export const BaseInput = observer(
   defineComponent({
@@ -16,7 +21,7 @@ export const BaseInput = observer(
     setup(props, { attrs, slots, emit }) {
       return () => {
         return h(
-          VanInput,
+          TransformVanInput,
           {
             class: [`${stylePrefix}-input`],
             attrs: {
